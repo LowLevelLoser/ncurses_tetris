@@ -5,13 +5,14 @@
 #include <ncurses.h>
 #include <math.h>
 #include <stdbool.h>
+#include <time.h>    // nanosleep
 
 #define SCREEN_WIDTH 860
 #define SCREEN_HEIGHT 860
 
 #define DRAW_GRID false
 
-#define KEY_DELAY .072
+#define KEY_DELAY 72
 #define ROWS 20
 #define COLUMNS 10
 #define GAME_SCREEN_WIDTH (SCREEN_WIDTH/2)
@@ -22,10 +23,12 @@
 #define ALT_CELL CELL_WIDTH
 #define TIME_TO_FALL 0.5
 #define MIN_TIME_TO_FALL .03
+#define TIME_PER_FRAME_IN_MS 19
 
 #define RUNNING_STATE 0
 #define GAME_OVER_STATE 1
 #define PAUSE_STATE 2
+#define QUIT_STATE 3
 
 #define EMPTY -1
 #define FALLING_SQUARE 1
@@ -49,7 +52,7 @@ typedef struct {
     int play_area[ROWS][COLUMNS];
     const int tetrominos[7][4][4][4];
     //const COLORS piece_color_index[7];
-    enum piece_t cached_index[3];
+    enum piece_t cached_index[2];
     enum piece_t piece_index;
     int piece_col;
     int piece_row;
@@ -67,5 +70,7 @@ typedef struct {
     bool alt_init;
     bool game_init;
 } game_t;
+
+void SleepInMilliseconds(int milliseconds);
 
 #endif

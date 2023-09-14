@@ -10,11 +10,15 @@
 #include "logic.h"
 
 int main(){
-    //InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tetris");
-    //SetWindowPosition(960 - SCREEN_WIDTH/2, 520);
-    ////InitAudioDevice();
-    //SetExitKey(0);
-    //SetTargetFPS(60);
+    // NCURSES initialization:
+    initscr();             // initialize curses
+    cbreak();              // pass key presses to program, but not signals
+    noecho();              // don't echo key presses to screen
+    keypad(stdscr, TRUE);  // allow arrow keys
+    timeout(0);            // no blocking on getch()
+    curs_set(0);           // set the cursor to invisible
+    //init_colors();         // setup tetris colors
+
 
     srand(time(NULL));
     int r = rand() % 7;
@@ -223,19 +227,17 @@ int main(){
     };
 
     memset(game.play_area, EMPTY, sizeof(game.play_area));
-    bool game_is_running = true;
-    while(game_is_running){
-        RunGame(&game);
-        BeginDrawing();
-            ClearBackground(RAYWHITE);
-            RenderGame(&game);
-        EndDrawing();
+    while(game.state != QUIT_STATE){
+        SleepInMilliseconds(TIME_PER_FRAME_IN_MS);
+        doupdate();
+        RunGame(&game, getch());
+        RenderGame(&game);
     }
     //StopMusicStream(music);
 
     //CloseAudioDevice();
 
-    CloseWindow();
+    endwin();
 
     return 0;
 }

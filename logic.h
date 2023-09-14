@@ -4,6 +4,6 @@
 
 #include "game.h"
 
-void RunGame(game_t *game);
+void RunGame(game_t *game, int key_pressed);
 
 #endif // !DEBUG

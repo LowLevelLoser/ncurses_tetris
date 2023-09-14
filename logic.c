@@ -33,12 +33,12 @@ bool canSwitch = true;
 float fallTime = 0;
 float timeToFall = TIME_TO_FALL;
 
-void RunGame(game_t *game){
+void RunGame(game_t *game, int key_pressed){
     static float left_time = KEY_DELAY;
     static float right_time = KEY_DELAY;
     static float down_time = KEY_DELAY;
     if(game->state == RUNNING_STATE){
-        fallTime += GetFrameTime();
+        fallTime += TIME_PER_FRAME_IN_MS;
         if(game->game_init == false){
             for(int i = 0; i < 3; i++){
                 srand(rand());
@@ -51,7 +51,7 @@ void RunGame(game_t *game){
             MoveDown(game);
         }
 
-        if(IsKeyDown(KEY_LEFT)){
+        if(key_pressed == (KEY_LEFT)){
             if(left_time >= KEY_DELAY){
                 MoveLeft(game);
                 left_time = 0;
@@ -60,7 +60,7 @@ void RunGame(game_t *game){
         else {
             left_time = KEY_DELAY;
         }
-        if(IsKeyDown(KEY_RIGHT)){
+        if(key_pressed == (KEY_RIGHT)){
             if(right_time >= KEY_DELAY){
                 MoveRight(game);
                 right_time = 0;
@@ -69,7 +69,7 @@ void RunGame(game_t *game){
         else {
             right_time = KEY_DELAY;
         }
-        if(IsKeyDown(KEY_DOWN)){
+        if(key_pressed == (KEY_DOWN)){
             if(down_time >= KEY_DELAY){
                 MoveDown(game);
                 down_time = 0;
@@ -79,36 +79,42 @@ void RunGame(game_t *game){
             down_time = KEY_DELAY;
         }
 
-        switch(GetKeyPressed()){
+        switch(key_pressed){
+            case 'q':
+                game->state = QUIT_STATE;
+                break;
              case KEY_UP:
                 Spin(game);
                 break;
-            case KEY_SPACE:
+            case ' ':
                 Drop(game);
                 break;
-            case KEY_C:
+            case 'c':
                 SwitchPiece(game);
                 break;
-            case KEY_R:
+            case 'r':
                 ResetGame(game);
                 break;
-            case KEY_ESCAPE:
+            case 27/*escape*/:
                 game->state = PAUSE_STATE;
                 break;
         }
-        left_time += GetFrameTime();
-        right_time += GetFrameTime();
-        down_time += GetFrameTime();
+        left_time += TIME_PER_FRAME_IN_MS;
+        right_time += TIME_PER_FRAME_IN_MS;
+        down_time += TIME_PER_FRAME_IN_MS;
 
         game->lowest_piece_row = GetLowestPossibleRow(game);
     }
 
     else{
-        switch(GetKeyPressed()){
-            case KEY_R:
+        switch(key_pressed){
+            case 'q':
+                game->state = QUIT_STATE;
+                break;
+            case 'r':
                 ResetGame(game);
                 break;
-            case KEY_ESCAPE:
+            case 27/*escape*/:
                 if(game->state  == PAUSE_STATE){
                     game->state = RUNNING_STATE;
                 }
