@@ -344,7 +344,7 @@ void NextPiece(game_t *game){
     if(r == game->cached_index[1]){
         r = (r+1)%7;
     }
-    game->cached_index[1] = r;
+    game->cached_index[1] = r%7;
     game->cached_index[0] = game->cached_index[1];
 }
 
