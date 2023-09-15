@@ -1,3 +1,4 @@
+#include <curses.h>
 #include <math.h>
 #include <ncurses.h>
 #include <stdbool.h>
@@ -40,7 +41,7 @@ void RunGame(game_t *game, int key_pressed){
     if(game->state == RUNNING_STATE){
         fallTime += TIME_PER_FRAME_IN_MS;
         if(game->game_init == false){
-            for(int i = 0; i < 3; i++){
+            for(int i = 0; i < 1; i++){
                 srand(rand());
                 game->cached_index[i] = rand();
             }
@@ -217,11 +218,12 @@ void SwitchPiece(game_t *game){
 bool Collides(game_t *game){
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 4; row++){
-            if(game->tetrominos[game->piece_index][game->tet_rotation][col][row] == FALLING_SQUARE){
-                if(game->piece_col+row >= COLUMNS || game->piece_col+row < 0){
+            if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
+                if(game->piece_col+col >= COLUMNS || game->piece_col+col < 0){
                     return true;
                 }
-                else if(game->piece_row+col >= ROWS){
+                else if(game->piece_row+row >= ROWS){
+                    printw("lows");
                     return true;
                 }
             }

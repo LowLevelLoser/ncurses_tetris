@@ -8,6 +8,7 @@
 #include "game.h"
 #include "rendering.h"
 #include "logic.h"
+#include "util.h"
 
 int main(){
     // NCURSES initialization:
@@ -230,8 +231,9 @@ int main(){
     while(game.state != QUIT_STATE){
         SleepInMilliseconds(TIME_PER_FRAME_IN_MS);
         doupdate();
-        RunGame(&game, getch());
         RenderGame(&game);
+        RunGame(&game, getch());
+        clear();
     }
     //StopMusicStream(music);
 
