@@ -43,7 +43,7 @@ void RunGame(game_t *game, int key_pressed){
         if(game->game_init == false){
             for(int i = 0; i < 1; i++){
                 srand(rand());
-                game->cached_index[i] = rand();
+                game->cached_index[i] = rand()%7;
             }
             game->game_init = true;
         }
