@@ -21,9 +21,9 @@
 #define CELL_HEIGHT (GAME_SCREEN_HEIGHT/ROWS)
 #define TINY_CELL 30
 #define ALT_CELL CELL_WIDTH
-#define TIME_TO_FALL 500
-#define MIN_TIME_TO_FALL .03
-#define TIME_PER_FRAME_IN_MS 19
+#define TIME_TO_FALL 400
+#define MIN_TIME_TO_FALL 10
+#define TIME_PER_FRAME_IN_MS 18
 
 #define RUNNING_STATE 0
 #define GAME_OVER_STATE 1
@@ -50,6 +50,7 @@ enum piece_t{
 
 typedef struct {
     int play_area[ROWS][COLUMNS];
+    char play_area_buffer[ROWS][COLUMNS*2];
     const int tetrominos[7][4][4][4];
     //const COLORS piece_color_index[7];
     enum piece_t cached_index[2];

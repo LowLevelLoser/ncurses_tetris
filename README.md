@@ -1,5 +1,5 @@
-# raylib_tetris
-a simple tetris implementation in raylib
+# ncurses_tetris
+a simple tetris implementation in ncurses
 
 ### Controls:
 up for spin

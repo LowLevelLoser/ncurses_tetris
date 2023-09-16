@@ -96,6 +96,9 @@ void RunGame(game_t *game, int key_pressed){
             case 'r':
                 ResetGame(game);
                 break;
+            case 'n':
+                NextPiece(game);
+                break;
             case 27/*escape*/:
                 game->state = PAUSE_STATE;
                 break;
@@ -149,7 +152,7 @@ void MoveRight(game_t *game){
     }
     game->piece_row++;
     if(Collides(game) == true){
-        fallTime -= KEY_DELAY - .01;
+        fallTime -= KEY_DELAY - 1;
     }
     game->piece_row--;
 }
@@ -163,7 +166,7 @@ void MoveDown(game_t *game){
     }
     game->piece_row++;
     if(Collides(game) == true){
-        fallTime -= KEY_DELAY - .01;
+        fallTime -= KEY_DELAY - 1;
     }
     game->piece_row--;
 }
@@ -181,7 +184,7 @@ void Spin(game_t *game) {
     }
     game->piece_row++;
     if(Collides(game) == true){
-        fallTime -= 0.1;
+        fallTime -= 10;
     }
     game->piece_row--;
 }
@@ -223,7 +226,6 @@ bool Collides(game_t *game){
                     return true;
                 }
                 else if(game->piece_row+row >= ROWS){
-                    printw("lows");
                     return true;
                 }
             }
@@ -318,7 +320,7 @@ void ClearFullLines(game_t *game){
 
     ClearFullLines(game);
     if (timeToFall > MIN_TIME_TO_FALL){
-        timeToFall = TIME_TO_FALL - game->line_cleared / 500.0;
+        timeToFall = TIME_TO_FALL - game->line_cleared;
     }
 }
 
@@ -344,7 +346,7 @@ void NextPiece(game_t *game){
     if(r == game->cached_index[1]){
         r = (r+1)%7;
     }
-    game->cached_index[1] = r%7;
+    game->cached_index[1] = r % 7;
     game->cached_index[0] = game->cached_index[1];
 }
 

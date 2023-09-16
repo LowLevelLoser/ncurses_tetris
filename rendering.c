@@ -1,6 +1,8 @@
+#include <curses.h>
 #include <ncurses.h>
 #include "game.h"
 #include "rendering.h"
+#include "util.h"
 
 void RenderRunningState(const game_t *game);
 void RenderGameOverState(const game_t *game);
@@ -21,38 +23,47 @@ void RenderGame(const game_t *game){
 }
 
 void RenderRunningState(const game_t *game){
-    //renders shadow piece
-    for(int col = 0; col < 4; col++){
-        for(int row = 0; row < 4; row++){
-            if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
-                //DrawRectangle((col + game->piece_col)*CELL_WIDTH, (row + game->lowest_piece_row)*CELL_HEIGHT,
-                //              CELL_WIDTH, CELL_HEIGHT, LIGHTGRAY);
-                mvaddch(row + game->lowest_piece_row, col + game->piece_col, '*');
-            }
-        }
-    }
-    
+#if 1
     // renders the board
     for(int row = 0; row < ROWS; row++){
         for(int col = 0; col < COLUMNS; col++){
             if(game->play_area[row][col] != EMPTY){
-                //DrawRectangle(col*CELL_WIDTH, row*CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT, game->piece_color_index[game->play_area[row][col]]);
-                mvaddch(row, col, '@');
+                mvaddch(row, 2*col, '[');
+                mvaddch(row, 2*col+1, ']');
+            }
+            else {
+                mvaddch(row, 2*col, ' ');
+                mvaddch(row, 2*col+1, '.');
             }
         }
     }
     
+    //renders shadow piece
+    for(int col = 0; col < 4; col++){
+        for(int row = 0; row < 4; row++){
+            if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
+                mvaddch(row + game->lowest_piece_row, 2*(col + game->piece_col), '(');
+                mvaddch(row + game->lowest_piece_row, 2*(col + game->piece_col) + 1, ')');
+            }
+        }
+    }
     //renders the falling piece
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 4; row++){
             if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
-                //DrawRectangle((col + game->piece_col)*CELL_WIDTH, (row + game->piece_row)*CELL_HEIGHT,
-                //              CELL_WIDTH, CELL_HEIGHT, game->piece_color_index[game->piece_index]);
-                mvaddch(row + game->piece_row, col + game->piece_col, '#');
+                mvaddch(row + game->piece_row, 2*(col + game->piece_col), '[');
+                mvaddch(row + game->piece_row, 2*(col + game->piece_col) + 1, ']');
             }
         }
     }
+#else
+    for(int row = 0; row < ROWS; row++){
+        for(int col = 0; col < COLUMNS * 2; col++){
+            mvaddch(row, col, game->play_area_buffer[row][col]);
+        }
+    }
 
+#endif
 }
 /*
    DrawLine(COLUMNS * CELL_WIDTH, 0, COLUMNS*CELL_WIDTH, GAME_SCREEN_HEIGHT, BLACK);
@@ -85,10 +96,10 @@ void RenderRunningState(const game_t *game){
 
 void RenderPauseState(const game_t *game){
     //DrawText("PAUSED", SCREEN_WIDTH/3-60, SCREEN_HEIGHT/3+20, 100, GRAY);
-    printw("PAUSED");
+    mvprintw(0,0,"PAUSED");
 }
 void RenderGameOverState(const game_t *game){
-    printw("GAME OVER \nscore: %d\nlines cleared: %s", game->score, game->lines_c);
+    mvprintw(0,0,"GAME OVER \nscore: %d\nlines cleared: %s", game->score, game->lines_c);
     //DrawText("GAME OVER", SCREEN_WIDTH/3-160, SCREEN_HEIGHT/3+20, 100, BLACK);
     //DrawText(game->score_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+20, 40, BLACK);
     //DrawText(game->lines_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+60,40, BLACK);

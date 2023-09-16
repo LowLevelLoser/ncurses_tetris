@@ -18,6 +18,7 @@ int main(){
     keypad(stdscr, TRUE);  // allow arrow keys
     timeout(0);            // no blocking on getch()
     curs_set(0);           // set the cursor to invisible
+    nodelay(stdscr, TRUE); // Set non-blocking input
     //init_colors();         // setup tetris colors
 
 
@@ -228,12 +229,18 @@ int main(){
     };
 
     memset(game.play_area, EMPTY, sizeof(game.play_area));
+    char buffer1[ROWS][COLUMNS*2];
+    char buffer2[ROWS][COLUMNS*2];
+    char (*current_buffer)[20] = buffer1;
+    char (*next_buffer)[20] = buffer2;
     while(game.state != QUIT_STATE){
-        SleepInMilliseconds(TIME_PER_FRAME_IN_MS);
+        //SleepInMilliseconds(TIME_PER_FRAME_IN_MS);
         doupdate();
-        RenderGame(&game);
+        napms(TIME_PER_FRAME_IN_MS);
         RunGame(&game, getch());
-        clear();
+        //WriteGameToBuffer(&game, game.play_area_buffer[0]);
+        RenderGame(&game);
+        //clear();
     }
     //StopMusicStream(music);
 
