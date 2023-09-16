@@ -229,10 +229,10 @@ int main(){
     };
 
     memset(game.play_area, EMPTY, sizeof(game.play_area));
-    char buffer1[ROWS][COLUMNS*2];
-    char buffer2[ROWS][COLUMNS*2];
-    char (*current_buffer)[20] = buffer1;
-    char (*next_buffer)[20] = buffer2;
+    //char buffer1[ROWS][COLUMNS*2];
+    //char buffer2[ROWS][COLUMNS*2];
+    //char (*current_buffer)[20] = buffer1;
+    //char (*next_buffer)[20] = buffer2;
     while(game.state != QUIT_STATE){
         //SleepInMilliseconds(TIME_PER_FRAME_IN_MS);
         doupdate();

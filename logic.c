@@ -101,6 +101,7 @@ void RunGame(game_t *game, int key_pressed){
                 break;
             case 27/*escape*/:
                 game->state = PAUSE_STATE;
+                clear();
                 break;
         }
         left_time += TIME_PER_FRAME_IN_MS;
@@ -278,8 +279,9 @@ bool Overlaps(game_t *game){
 }
 
 void SettlePiece(game_t *game) {
-    if(game->piece_row <= 0){
+    if(game->piece_row <= 0 && game->piece_col == 3){
         game->state = GAME_OVER_STATE;
+        clear();
     }
     for (int row = 0; row < 4; ++row) {
         for (int col = 0; col < 4; ++col) {
@@ -364,7 +366,10 @@ void ResetPlacement(game_t *game){
 }
 
 void ResetGame(game_t *game){
-    NextPiece(game);
+    for(int i = 0; i < 1; i++){
+        srand(rand());
+        game->cached_index[i] = rand()%7;
+    }
     memset(game->play_area, EMPTY, sizeof(int)*ROWS*COLUMNS);
     game->state = RUNNING_STATE;
     game->score = 0;
@@ -375,4 +380,5 @@ void ResetGame(game_t *game){
     canSwitch = true;
     timeToFall = TIME_TO_FALL;
     ResetPlacement(game);
+    clear();
 }

@@ -65,12 +65,12 @@ void RenderRunningState(const game_t *game){
         for(int col = 0; col < 4; col++){
             for(int row = 0; row < 4; row++){
                 if(game->tetrominos[game->alt_index][0][row][col] == FALLING_SQUARE){
-                    mvaddch(row + 2, 2*col + 2*COLUMNS + 3, '[');
-                    mvaddch(row + 2, 2*col + 2*COLUMNS + 4, ']');
+                    mvaddch(row + 2, 2*col + 2*COLUMNS + 2, '[');
+                    mvaddch(row + 2, 2*col + 2*COLUMNS + 3, ']');
                 }
                 else{
+                    mvaddch(row + 2, 2*col + 2*COLUMNS + 2, ' ');
                     mvaddch(row + 2, 2*col + 2*COLUMNS + 3, ' ');
-                    mvaddch(row + 2, 2*col + 2*COLUMNS + 4, ' ');
                 }
             }
         }
@@ -83,12 +83,12 @@ void RenderRunningState(const game_t *game){
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 4; row++){
             if(game->tetrominos[game->cached_index[0]][0][row][col] == FALLING_SQUARE){
-                mvaddch(row + 8, 2*col + 2*COLUMNS + 3, '[');
-                mvaddch(row + 8, 2*col + 2*COLUMNS + 4, ']');
+                mvaddch(row + 8, 2*col + 2*COLUMNS + 2, '[');
+                mvaddch(row + 8, 2*col + 2*COLUMNS + 3, ']');
             }
             else{
+                mvaddch(row + 8, 2*col + 2*COLUMNS + 2, ' ');
                 mvaddch(row + 8, 2*col + 2*COLUMNS + 3, ' ');
-                mvaddch(row + 8, 2*col + 2*COLUMNS + 4, ' ');
             }
         }
     }
