@@ -364,6 +364,7 @@ void ResetPlacement(game_t *game){
 }
 
 void ResetGame(game_t *game){
+    NextPiece(game);
     memset(game->play_area, EMPTY, sizeof(int)*ROWS*COLUMNS);
     game->state = RUNNING_STATE;
     game->score = 0;

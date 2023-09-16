@@ -56,6 +56,47 @@ void RenderRunningState(const game_t *game){
             }
         }
     }
+
+    for (int i = 0; i < ROWS; i++){
+        mvaddch(i, 2*COLUMNS + 1, '|');
+    }
+    // render RenderMiniPieces
+    if(game->alt_init == true){
+        for(int col = 0; col < 4; col++){
+            for(int row = 0; row < 4; row++){
+                if(game->tetrominos[game->alt_index][0][row][col] == FALLING_SQUARE){
+                    mvaddch(row + 2, 2*col + 2*COLUMNS + 3, '[');
+                    mvaddch(row + 2, 2*col + 2*COLUMNS + 4, ']');
+                }
+                else{
+                    mvaddch(row + 2, 2*col + 2*COLUMNS + 3, ' ');
+                    mvaddch(row + 2, 2*col + 2*COLUMNS + 4, ' ');
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < 8; i++){
+        mvaddch(6, 2*COLUMNS + 2 + i, '*');
+    }
+
+    for(int col = 0; col < 4; col++){
+        for(int row = 0; row < 4; row++){
+            if(game->tetrominos[game->cached_index[0]][0][row][col] == FALLING_SQUARE){
+                mvaddch(row + 8, 2*col + 2*COLUMNS + 3, '[');
+                mvaddch(row + 8, 2*col + 2*COLUMNS + 4, ']');
+            }
+            else{
+                mvaddch(row + 8, 2*col + 2*COLUMNS + 3, ' ');
+                mvaddch(row + 8, 2*col + 2*COLUMNS + 4, ' ');
+            }
+        }
+    }
+
+    //render score and lines;
+    //DrawText(game->score_c, GAME_SCREEN_WIDTH+10, 780, 30, BLACK);
+    //DrawText(game->lines_c, GAME_SCREEN_WIDTH+10, 810, 30, BLACK);
+ 
 #else
     for(int row = 0; row < ROWS; row++){
         for(int col = 0; col < COLUMNS * 2; col++){
@@ -65,34 +106,6 @@ void RenderRunningState(const game_t *game){
 
 #endif
 }
-/*
-   DrawLine(COLUMNS * CELL_WIDTH, 0, COLUMNS*CELL_WIDTH, GAME_SCREEN_HEIGHT, BLACK);
-    // render RenderMiniPieces
-    if(game->alt_init == true){
-        for(int col = 0; col < 4; col++){
-            for(int row = 0; row < 4; row++){
-                if(game->tetrominos[game->alt_index][0][row][col] == FALLING_SQUARE){
-                    DrawRectangle((col*ALT_CELL)+GAME_SCREEN_WIDTH+123, (row*ALT_CELL)+ 10, ALT_CELL, ALT_CELL,
-                            game->piece_color_index[game->alt_index]);
-                }
-            }
-        }
-    }
-
-    for(int col = 0; col < 4; col++){
-        for(int row = 0; row < 4; row++){
-            if(game->tetrominos[game->cached_index[0]][0][row][col] == FALLING_SQUARE){
-                DrawRectangle((col*TINY_CELL)+GAME_SCREEN_WIDTH+148, ((row)*TINY_CELL)+ 110, TINY_CELL, TINY_CELL,
-                        game->piece_color_index[game->cached_index[0]]);
-            }
-        }
-    }
-
-    //render score and lines;
-    DrawText(game->score_c, GAME_SCREEN_WIDTH+10, 780, 30, BLACK);
-    DrawText(game->lines_c, GAME_SCREEN_WIDTH+10, 810, 30, BLACK);
-}
-*/
 
 void RenderPauseState(const game_t *game){
     //DrawText("PAUSED", SCREEN_WIDTH/3-60, SCREEN_HEIGHT/3+20, 100, GRAY);
