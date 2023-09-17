@@ -20,7 +20,7 @@ int main(){
     curs_set(0);           // set the cursor to invisible
     nodelay(stdscr, TRUE); // Set non-blocking input
     //init_colors();         // setup tetris colors
-
+//has_key()
 
     srand(time(NULL));
     int r = rand() % 7;

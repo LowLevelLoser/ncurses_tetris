@@ -22,7 +22,7 @@
 #define TINY_CELL 30
 #define ALT_CELL CELL_WIDTH
 #define TIME_TO_FALL 400
-#define MIN_TIME_TO_FALL 10
+#define MIN_TIME_TO_FALL 20
 #define TIME_PER_FRAME_IN_MS 18
 
 #define RUNNING_STATE 0

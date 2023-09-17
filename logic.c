@@ -96,9 +96,6 @@ void RunGame(game_t *game, int key_pressed){
             case 'r':
                 ResetGame(game);
                 break;
-            case 'n':
-                NextPiece(game);
-                break;
             case 27/*escape*/:
                 game->state = PAUSE_STATE;
                 clear();
@@ -322,7 +319,7 @@ void ClearFullLines(game_t *game){
 
     ClearFullLines(game);
     if (timeToFall > MIN_TIME_TO_FALL){
-        timeToFall = TIME_TO_FALL - game->line_cleared;
+        timeToFall = TIME_TO_FALL - 2*game->line_cleared;
     }
 }
 

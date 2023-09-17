@@ -93,6 +93,8 @@ void RenderRunningState(const game_t *game){
         }
     }
 
+    mvprintw(0,2*COLUMNS+2,"%s",game->score_c);
+    mvprintw(1,2*COLUMNS+2,"%s",game->lines_c);
     //render score and lines;
     //DrawText(game->score_c, GAME_SCREEN_WIDTH+10, 780, 30, BLACK);
     //DrawText(game->lines_c, GAME_SCREEN_WIDTH+10, 810, 30, BLACK);
@@ -112,7 +114,7 @@ void RenderPauseState(const game_t *game){
     mvprintw(0,0,"PAUSED");
 }
 void RenderGameOverState(const game_t *game){
-    mvprintw(0,0,"GAME OVER \nscore: %d\nlines cleared: %s", game->score, game->lines_c);
+    mvprintw(0,0,"GAME OVER \n%s\n%s", game->score_c, game->lines_c);
     //DrawText("GAME OVER", SCREEN_WIDTH/3-160, SCREEN_HEIGHT/3+20, 100, BLACK);
     //DrawText(game->score_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+20, 40, BLACK);
     //DrawText(game->lines_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+60,40, BLACK);
