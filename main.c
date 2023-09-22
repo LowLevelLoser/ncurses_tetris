@@ -1,14 +1,23 @@
 #include <curses.h>
+#include <ncurses.h>
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include "game.h"
 #include "rendering.h"
 #include "logic.h"
 #include "util.h"
+
+//static void Clear(int sig){
+//    doupdate();
+//    clear();
+//    mvprintw(0, 0, "cum");
+//    napms(1000);
+//}
 
 int main(){
     // NCURSES initialization:
@@ -235,12 +244,13 @@ int main(){
     //char (*next_buffer)[20] = buffer2;
     while(game.state != QUIT_STATE){
         //SleepInMilliseconds(TIME_PER_FRAME_IN_MS);
+        //signal(SIGWINCH, Clear);
         doupdate();
         napms(TIME_PER_FRAME_IN_MS);
         RunGame(&game, getch());
         //WriteGameToBuffer(&game, game.play_area_buffer[0]);
-        RenderGame(&game);
         //clear();
+        RenderGame(&game);
     }
     //StopMusicStream(music);
 

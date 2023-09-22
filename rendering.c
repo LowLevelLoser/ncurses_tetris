@@ -1,5 +1,7 @@
 #include <curses.h>
 #include <ncurses.h>
+#include <signal.h>
+#include <stdbool.h>
 #include "game.h"
 #include "rendering.h"
 #include "util.h"
@@ -7,6 +9,9 @@
 void RenderRunningState(const game_t *game);
 void RenderGameOverState(const game_t *game);
 void RenderPauseState(const game_t *game);
+
+int winChange;
+bool winChangeInit = false;
 
 void RenderGame(const game_t *game){
     switch(game->state){
@@ -21,19 +26,33 @@ void RenderGame(const game_t *game){
             break;
     }
 }
+//wresize
+//resizeterm
 
 void RenderRunningState(const game_t *game){
+    int max_col = stdscr->_maxx;
+    if(winChangeInit == true){
+        if(winChange != max_col){
+            clear();
+        }
+    }
+    winChangeInit = true;
+    winChange = max_col;
+    int max_row = stdscr->_maxy;
+    int center_col = max_col/2 - COLUMNS;
+    int center_row = max_row/2 - ROWS/2;
+
 #if 1
     // renders the board
     for(int row = 0; row < ROWS; row++){
         for(int col = 0; col < COLUMNS; col++){
             if(game->play_area[row][col] != EMPTY){
-                mvaddch(row, 2*col, '[');
-                mvaddch(row, 2*col+1, ']');
+                mvaddch(row + center_row, 2*col + center_col, '[');
+                mvaddch(row + center_row, 2*col+1 + center_col, ']');
             }
             else {
-                mvaddch(row, 2*col, ' ');
-                mvaddch(row, 2*col+1, '.');
+                mvaddch(row + center_row, 2*col + center_col, ' ');
+                mvaddch(row + center_row, 2*col+1 + center_col, '.');
             }
         }
     }
@@ -42,8 +61,8 @@ void RenderRunningState(const game_t *game){
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 4; row++){
             if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
-                mvaddch(row + game->lowest_piece_row, 2*(col + game->piece_col), '(');
-                mvaddch(row + game->lowest_piece_row, 2*(col + game->piece_col) + 1, ')');
+                mvaddch(row + game->lowest_piece_row + center_row, 2*(col + game->piece_col) + center_col, '(');
+                mvaddch(row + game->lowest_piece_row + center_row, 2*(col + game->piece_col) + 1 + center_col, ')');
             }
         }
     }
@@ -51,50 +70,50 @@ void RenderRunningState(const game_t *game){
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 4; row++){
             if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
-                mvaddch(row + game->piece_row, 2*(col + game->piece_col), '[');
-                mvaddch(row + game->piece_row, 2*(col + game->piece_col) + 1, ']');
+                mvaddch(row + game->piece_row + center_row, 2*(col + game->piece_col) + center_col, '[');
+                mvaddch(row + game->piece_row + center_row, 2*(col + game->piece_col) + 1 + center_col, ']');
             }
         }
     }
 
-    for (int i = 0; i < ROWS; i++){
-        mvaddch(i, 2*COLUMNS + 1, '|');
-    }
+    //for (int i = 0; i < ROWS; i++){
+    //    mvaddch(i + center_row, 2*COLUMNS + 1 + center_col, '|');
+    //}
     // render RenderMiniPieces
     if(game->alt_init == true){
         for(int col = 0; col < 4; col++){
             for(int row = 0; row < 4; row++){
                 if(game->tetrominos[game->alt_index][0][row][col] == FALLING_SQUARE){
-                    mvaddch(row + 2, 2*col + 2*COLUMNS + 2, '[');
-                    mvaddch(row + 2, 2*col + 2*COLUMNS + 3, ']');
+                    mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 2 + center_col, '[');
+                    mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ']');
                 }
                 else{
-                    mvaddch(row + 2, 2*col + 2*COLUMNS + 2, ' ');
-                    mvaddch(row + 2, 2*col + 2*COLUMNS + 3, ' ');
+                    mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 2 + center_col, ' ');
+                    mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ' ');
                 }
             }
         }
     }
 
     for (int i = 0; i < 8; i++){
-        mvaddch(6, 2*COLUMNS + 2 + i, '*');
+        mvaddch(6 + center_row, 2*COLUMNS + 2 + i + center_col, '*');
     }
 
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 4; row++){
             if(game->tetrominos[game->cached_index[0]][0][row][col] == FALLING_SQUARE){
-                mvaddch(row + 8, 2*col + 2*COLUMNS + 2, '[');
-                mvaddch(row + 8, 2*col + 2*COLUMNS + 3, ']');
+                mvaddch(row + 8 + center_row, 2*col + 2*COLUMNS + 2 + center_col, '[');
+                mvaddch(row + 8 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ']');
             }
             else{
-                mvaddch(row + 8, 2*col + 2*COLUMNS + 2, ' ');
-                mvaddch(row + 8, 2*col + 2*COLUMNS + 3, ' ');
+                mvaddch(row + 8 + center_row, 2*col + 2*COLUMNS + 2 + center_col, ' ');
+                mvaddch(row + 8 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ' ');
             }
         }
     }
 
-    mvprintw(0,2*COLUMNS+2,"%s",game->score_c);
-    mvprintw(1,2*COLUMNS+2,"%s",game->lines_c);
+    mvprintw(center_row, center_col + 2*COLUMNS+2,"%s",game->score_c);
+    mvprintw(center_row + 1, center_col + 2*COLUMNS+2,"%s",game->lines_c);
     //render score and lines;
     //DrawText(game->score_c, GAME_SCREEN_WIDTH+10, 780, 30, BLACK);
     //DrawText(game->lines_c, GAME_SCREEN_WIDTH+10, 810, 30, BLACK);
@@ -111,10 +130,20 @@ void RenderRunningState(const game_t *game){
 
 void RenderPauseState(const game_t *game){
     //DrawText("PAUSED", SCREEN_WIDTH/3-60, SCREEN_HEIGHT/3+20, 100, GRAY);
-    mvprintw(0,0,"PAUSED");
+    int max_col = stdscr->_maxx;
+    int max_row = stdscr->_maxy;
+    int center_col = max_col/2 - COLUMNS;
+    int center_row = max_row/2 - ROWS/2;
+    mvprintw(center_row,center_col,"PAUSED");
 }
 void RenderGameOverState(const game_t *game){
-    mvprintw(0,0,"GAME OVER \n%s\n%s", game->score_c, game->lines_c);
+    int max_col = stdscr->_maxx;
+    int max_row = stdscr->_maxy;
+    int center_col = max_col/2 - COLUMNS;
+    int center_row = max_row/2 - ROWS/2;
+    mvprintw(center_row,center_col,"GAME OVER");
+    mvprintw(center_row+1,center_col,"%s", game->score_c);
+    mvprintw(center_row+2,center_col,"%s", game->lines_c);
     //DrawText("GAME OVER", SCREEN_WIDTH/3-160, SCREEN_HEIGHT/3+20, 100, BLACK);
     //DrawText(game->score_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+20, 40, BLACK);
     //DrawText(game->lines_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+60,40, BLACK);

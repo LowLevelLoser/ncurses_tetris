@@ -1,9 +1,8 @@
-#include <time.h>    // nanosleep
 #include "game.h"
 
 void WriteGameToBuffer(game_t *game, char *buffer){
     // renders the board
-    char temp_buffer[ROWS][COLUMNS*2];
+    char temp_buffer[ROWS][COLUMNS*3];
     for(int row = 0; row < ROWS; row++){
         for(int col = 0; col < COLUMNS; col++){
             if(game->play_area[row][col] != EMPTY){
@@ -36,8 +35,8 @@ void WriteGameToBuffer(game_t *game, char *buffer){
             }
         }
     }
-    for (int i = 0; i < ROWS*COLUMNS*2 ; i++) {
-        *(buffer + i) = temp_buffer[i/ROWS][i%(2*COLUMNS)];
+    for (int i = 0; i < ROWS*COLUMNS*3 ; i++) {
+        *(buffer + i) = temp_buffer[i/ROWS][i%(3*COLUMNS)];
     }
 
 }
