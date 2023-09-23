@@ -60,7 +60,7 @@ void RenderRunningState(const game_t *game){
     //renders shadow piece
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 4; row++){
-            if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
+            if(game->lowest_piece_row >= 0 && game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
                 mvaddch(row + game->lowest_piece_row + center_row, 2*(col + game->piece_col) + center_col, '(');
                 mvaddch(row + game->lowest_piece_row + center_row, 2*(col + game->piece_col) + 1 + center_col, ')');
             }

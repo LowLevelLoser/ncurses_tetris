@@ -276,7 +276,7 @@ bool Overlaps(game_t *game){
 }
 
 void SettlePiece(game_t *game) {
-    if(game->piece_row <= 0 && game->piece_col == 3){
+    if(game->piece_row <= 0){
         game->state = GAME_OVER_STATE;
         clear();
     }

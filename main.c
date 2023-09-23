@@ -247,10 +247,10 @@ int main(){
         //signal(SIGWINCH, Clear);
         doupdate();
         napms(TIME_PER_FRAME_IN_MS);
+        RenderGame(&game);
         RunGame(&game, getch());
         //WriteGameToBuffer(&game, game.play_area_buffer[0]);
         //clear();
-        RenderGame(&game);
     }
     //StopMusicStream(music);
 
