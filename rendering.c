@@ -30,7 +30,7 @@ void RenderGame(const game_t *game){
 //resizeterm
 
 void RenderRunningState(const game_t *game){
-    int max_col = stdscr->_maxx;
+    int max_col = getmaxx(stdscr);
     if(winChangeInit == true){
         if(winChange != max_col){
             clear();
@@ -38,7 +38,8 @@ void RenderRunningState(const game_t *game){
     }
     winChangeInit = true;
     winChange = max_col;
-    int max_row = stdscr->_maxy;
+    //int max_row = getmax(stdscr)y;
+    int max_row = getmaxy(stdscr);
     int center_col = max_col/2 - COLUMNS;
     int center_row = max_row/2 - ROWS/2;
 
@@ -130,15 +131,15 @@ void RenderRunningState(const game_t *game){
 
 void RenderPauseState(const game_t *game){
     //DrawText("PAUSED", SCREEN_WIDTH/3-60, SCREEN_HEIGHT/3+20, 100, GRAY);
-    int max_col = stdscr->_maxx;
-    int max_row = stdscr->_maxy;
+    int max_col = getmaxx(stdscr);
+    int max_row = getmaxy(stdscr);
     int center_col = max_col/2 - COLUMNS;
     int center_row = max_row/2 - ROWS/2;
     mvprintw(center_row,center_col,"PAUSED");
 }
 void RenderGameOverState(const game_t *game){
-    int max_col = stdscr->_maxx;
-    int max_row = stdscr->_maxy;
+    int max_col = getmaxx(stdscr);
+    int max_row = getmaxy(stdscr);
     int center_col = max_col/2 - COLUMNS;
     int center_row = max_row/2 - ROWS/2;
     mvprintw(center_row,center_col,"GAME OVER");
