@@ -4,5 +4,5 @@
 #include "game.h"
 
 void WriteGameToBuffer(game_t *game, char *buffer);
-
+void InitColorPairs();
 #endif
