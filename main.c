@@ -5,7 +5,6 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
 
 #include "game.h"
 #include "rendering.h"
@@ -20,11 +19,8 @@ int main(){
 		printf("Your terminal does not support color\n");
 		exit(1);
 	}
-	//if (can_change_color()){
-	//	init_color(COLOR_WHITE, 1000, 647, 0); //replace white with orange
-	//}
+
 	InitColorPairs();
-	//start_color();
 
 	cbreak();              // pass key presses to program, but not signals
 	noecho();              // don't echo key presses to screen
@@ -48,19 +44,13 @@ int main(){
 		.piece_row = 0,
 		.lowest_piece_row = 0,
 		.state = RUNNING_STATE,
-
 		.score_c = "score: 0",
 		.lines_c = "lines: 0",
-		//.piece_color_index = {CYAN, BLUE, ORANGE, YELLOW, GREEN, PURPLE, RED},
 		.tetrominos =
-#include "TetrominoDef.txt"
+		#include "TetrominoDef.txt"
 	};
 
 	memset(game.play_area, EMPTY, sizeof(game.play_area));
-	//char buffer1[ROWS][COLUMNS*2];
-	//char buffer2[ROWS][COLUMNS*2];
-	//char (*current_buffer)[20] = buffer1;
-	//char (*next_buffer)[20] = buffer2;
 	while(game.state != QUIT_STATE){
 		//SleepInMilliseconds(TIME_PER_FRAME_IN_MS);
 		//signal(SIGWINCH, Clear);
@@ -71,9 +61,6 @@ int main(){
 		//WriteGameToBuffer(&game, game.play_area_buffer[0]);
 		//clear();
 	}
-	//StopMusicStream(music);
-
-	//CloseAudioDevice();
 
 	endwin();
 

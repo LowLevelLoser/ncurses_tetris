@@ -79,11 +79,8 @@ void RenderRunningState(const game_t *game){
 	}
 	attroff(COLOR_PAIR(game->piece_index + 1));
 
-	//for (int i = 0; i < ROWS; i++){
-	//    mvaddch(i + center_row, 2*COLUMNS + 1 + center_col, '|');
-	//}
 	// render RenderMiniPieces
-	if(game->alt_init == true){
+	if(game->alt_init == true){ //Cached Piece
 		for(int col = 0; col < 4; col++){
 			for(int row = 0; row < 4; row++){
 				if(game->tetrominos[game->alt_index][0][row][col] == FALLING_SQUARE){
@@ -104,7 +101,7 @@ void RenderRunningState(const game_t *game){
 		mvaddch(6 + center_row, 2*COLUMNS + 2 + i + center_col, '*');
 	}
 
-	for(int col = 0; col < 4; col++){
+	for(int col = 0; col < 4; col++){ //Up Next
 		for(int row = 0; row < 4; row++){
 			if(game->tetrominos[game->cached_index[0]][0][row][col] == FALLING_SQUARE){
 				attron(COLOR_PAIR(game->cached_index[0] + 1));
@@ -121,10 +118,6 @@ void RenderRunningState(const game_t *game){
 
 	mvprintw(center_row, center_col + 2*COLUMNS+2,"%s",game->score_c);
 	mvprintw(center_row + 1, center_col + 2*COLUMNS+2,"%s",game->lines_c);
-	//render score and lines;
-	//DrawText(game->score_c, GAME_SCREEN_WIDTH+10, 780, 30, BLACK);
-	//DrawText(game->lines_c, GAME_SCREEN_WIDTH+10, 810, 30, BLACK);
-
 #else
 	for(int row = 0; row < ROWS; row++){
 		for(int col = 0; col < COLUMNS * 2; col++){
@@ -136,22 +129,22 @@ void RenderRunningState(const game_t *game){
 }
 
 void RenderPauseState(const game_t *game){
-	//DrawText("PAUSED", SCREEN_WIDTH/3-60, SCREEN_HEIGHT/3+20, 100, GRAY);
+	clear();
 	int max_col = getmaxx(stdscr);
 	int max_row = getmaxy(stdscr);
-	int center_col = max_col/2 - COLUMNS;
-	int center_row = max_row/2 - ROWS/2;
+	int center_col = max_col/2 - 3;
+	int center_row = max_row/2 - 1;
 	mvprintw(center_row,center_col,"PAUSED");
+	refresh();
 }
 void RenderGameOverState(const game_t *game){
+	clear();
 	int max_col = getmaxx(stdscr);
 	int max_row = getmaxy(stdscr);
-	int center_col = max_col/2 - COLUMNS;
-	int center_row = max_row/2 - ROWS/2;
+	int center_col = max_col/2 - 5;
+	int center_row = max_row/2 - 1;
 	mvprintw(center_row,center_col,"GAME OVER");
 	mvprintw(center_row+1,center_col,"%s", game->score_c);
 	mvprintw(center_row+2,center_col,"%s", game->lines_c);
-	//DrawText("GAME OVER", SCREEN_WIDTH/3-160, SCREEN_HEIGHT/3+20, 100, BLACK);
-	//DrawText(game->score_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+20, 40, BLACK);
-	//DrawText(game->lines_c, SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2+60,40, BLACK);
+	refresh();
 }
