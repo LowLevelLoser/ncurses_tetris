@@ -14,10 +14,7 @@ void DrawFallingPiece(const game_t *game, int center_row, int center_col);
 void DrawCachedPiece(const game_t *game, int center_row, int center_col);
 void DrawNextPiece(const game_t *game, int center_row, int center_col);
 
-int winChange;
-bool winChangeInit = false;
 bool render_colors = true;
-extern bool has_colors();
 
 void RenderGame(const game_t *game){
 	switch(game->state){
@@ -34,29 +31,21 @@ void RenderGame(const game_t *game){
 }
 
 void RenderRunningState(const game_t *game){
-	int max_col = getmaxx(stdscr);
-	if(winChangeInit == true){
-		if(winChange != max_col){
-			clear();
-		}
-	}
-	winChangeInit = true;
-	winChange = max_col;
-	int max_row = getmaxy(stdscr);
-	int center_col = max_col/2 - COLUMNS;
-	int center_row = max_row/2 - ROWS/2;
-
+	clear();
+	int center_row = getmaxy(stdscr)/2 - ROWS/2;
+	int center_col = getmaxx(stdscr)/2 - COLUMNS;
 	DrawBoard(game, center_row, center_col);
 	DrawShadowPiece(game, center_row, center_col);
 	DrawFallingPiece(game, center_row, center_col);
 	DrawCachedPiece(game, center_row, center_col);
 	DrawNextPiece(game, center_row, center_col);
 
-	for (int i = 0; i < 8; i++){ //this doesn't need to be its own function i think
+	for (int i = 0; i < 8; i++){ //this doesn't need to be its own function
 		mvaddch(6 + center_row, 2*COLUMNS + 2 + i + center_col, '*');
 	}
 	mvprintw(center_row, center_col + 2*COLUMNS+2,"%s",game->score_c);
 	mvprintw(center_row + 1, center_col + 2*COLUMNS+2,"%s",game->lines_c);
+	refresh();
 }
 
 void DrawBoard(const game_t *game, int center_row, int center_col){
@@ -80,8 +69,10 @@ void DrawShadowPiece(const game_t *game, int center_row, int center_col){
 	for(int col = 0; col < 4; col++){
 		for(int row = 0; row < 4; row++){
 			if(game->lowest_piece_row >= 0 && game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
+				ATTRON(render_colors, 7);
 				mvaddch(row + game->lowest_piece_row + center_row, 2*(col + game->piece_col) + center_col, '(');
 				mvaddch(row + game->lowest_piece_row + center_row, 2*(col + game->piece_col) + 1 + center_col, ')');
+				ATTROFF(render_colors, 7);
 			}
 		}
 	}

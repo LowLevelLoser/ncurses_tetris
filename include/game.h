@@ -27,7 +27,7 @@
 
 #define CLEAR_BAR COLUMNS
 
-#define FULL_BLOCK_COLOR true
+#define FULL_BLOCK_COLOR 1
 
 #define ATTRON(cond, idx) \
 	do { if (cond) attron(COLOR_PAIR((idx) + 1)); } while (0)

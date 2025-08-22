@@ -21,6 +21,7 @@ void InitColorPairs(){
 	init_pair(6, 129, COLOR_BLACK);    //PURPLE
 	init_pair(7, 196, COLOR_BLACK);    //RED
 #endif
+	init_pair(8, COLOR_WHITE, COLOR_WHITE);  // SHADOW COLOR
 }
 
 void InitCurses(){
