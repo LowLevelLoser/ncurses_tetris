@@ -3,6 +3,8 @@
 
 #include "game.h"
 
-void WriteGameToBuffer(game_t *game, char *buffer);
 void InitColorPairs();
+void InitCurses();
+game_t InitGameData();
+
 #endif

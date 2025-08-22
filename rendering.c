@@ -24,8 +24,6 @@ void RenderGame(const game_t *game){
 			break;
 	}
 }
-//wresize
-//resizeterm
 
 void RenderRunningState(const game_t *game){
 	int max_col = getmaxx(stdscr);
@@ -41,7 +39,6 @@ void RenderRunningState(const game_t *game){
 	int center_col = max_col/2 - COLUMNS;
 	int center_row = max_row/2 - ROWS/2;
 
-#if 1
 	// renders the board
 	for(int row = 0; row < ROWS; row++){
 		for(int col = 0; col < COLUMNS; col++){
@@ -118,14 +115,6 @@ void RenderRunningState(const game_t *game){
 
 	mvprintw(center_row, center_col + 2*COLUMNS+2,"%s",game->score_c);
 	mvprintw(center_row + 1, center_col + 2*COLUMNS+2,"%s",game->lines_c);
-#else
-	for(int row = 0; row < ROWS; row++){
-		for(int col = 0; col < COLUMNS * 2; col++){
-			mvaddch(row, col, game->play_area_buffer[row][col]);
-		}
-	}
-
-#endif
 }
 
 void RenderPauseState(const game_t *game){

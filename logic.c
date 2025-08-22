@@ -1,11 +1,9 @@
 #include <curses.h>
-#include <math.h>
 #include <ncurses.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <time.h>
 
 #include "game.h"
 #include "logic.h"

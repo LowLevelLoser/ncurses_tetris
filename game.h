@@ -7,20 +7,9 @@
 #include <stdbool.h>
 #include <time.h>    // nanosleep
 
-#define SCREEN_WIDTH 860
-#define SCREEN_HEIGHT 860
-
-#define DRAW_GRID false
-
 #define KEY_DELAY 72
 #define ROWS 20
 #define COLUMNS 10
-#define GAME_SCREEN_WIDTH (SCREEN_WIDTH/2)
-#define GAME_SCREEN_HEIGHT SCREEN_HEIGHT
-#define CELL_WIDTH (GAME_SCREEN_WIDTH/COLUMNS)
-#define CELL_HEIGHT (GAME_SCREEN_HEIGHT/ROWS)
-#define TINY_CELL 30
-#define ALT_CELL CELL_WIDTH
 #define TIME_TO_FALL 400
 #define MIN_TIME_TO_FALL 20
 #define TIME_PER_FRAME_IN_MS 18
@@ -37,6 +26,8 @@
 #define F FALLING_SQUARE
 
 #define CLEAR_BAR COLUMNS
+
+#define FULL_BLOCK_COLOR true
 
 enum piece_t{
 	I_PIECE,
@@ -71,7 +62,4 @@ typedef struct {
 	bool alt_init;
 	bool game_init;
 } game_t;
-
-void SleepInMilliseconds(int milliseconds);
-
 #endif

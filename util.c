@@ -1,52 +1,10 @@
 #include "game.h"
 #include <curses.h>
-
-
-void WriteGameToBuffer(game_t *game, char *buffer){
-    // renders the board
-    char temp_buffer[ROWS][COLUMNS*3];
-    for(int row = 0; row < ROWS; row++){
-        for(int col = 0; col < COLUMNS; col++){
-            if(game->play_area[row][col] != EMPTY){
-                temp_buffer[row][2*col] = '[';
-                temp_buffer[row][2*col + 1] = ']';
-            }
-            else {
-                temp_buffer[row][2*col] = ' ';
-                temp_buffer[row][2*col + 1] = '.';
-            }
-        }
-    }
-    if (game->state == RUNNING_STATE){
-        //renders shadow piece
-        for(int col = 0; col < 4; col++){
-            for(int row = 0; row < 4; row++){
-                if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
-                    temp_buffer[row + game->lowest_piece_row][2*(col + game->piece_col)] = '(';
-                    temp_buffer[row + game->lowest_piece_row][2*(col + game->piece_col) + 1] = ')';
-                }
-            }
-        }
-        //renders the falling piece
-        for(int col = 0; col < 4; col++){
-            for(int row = 0; row < 4; row++){
-                if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
-                    temp_buffer[row + game->piece_row][2*(col + game->piece_col)] = '[';
-                    temp_buffer[row + game->piece_row][2*(col + game->piece_col) + 1] = ']';
-                }
-            }
-        }
-    }
-    for (int i = 0; i < ROWS*COLUMNS*3 ; i++) {
-        *(buffer + i) = temp_buffer[i/ROWS][i%(3*COLUMNS)];
-    }
-
-}
-
+#include <stdlib.h>
+#include <string.h>
 
 void InitColorPairs(){
 	start_color();
-	int FULL_BLOCK_COLOR = 1;
 	if (FULL_BLOCK_COLOR){
 		init_pair(1, 51, 51);     //CYAN
 		init_pair(2, 21, 21);     //BLUE
@@ -67,3 +25,46 @@ void InitColorPairs(){
 	}
 }
 
+void InitCurses(){
+	initscr();
+	if (has_colors() == FALSE){
+		endwin();
+		printf("Your terminal does not support color\n");
+		exit(1);
+	}
+
+	InitColorPairs();
+
+	cbreak();              // pass key presses to program, but not signals
+	noecho();              // don't echo key presses to screen
+	keypad(stdscr, TRUE);  // allow arrow keys
+	timeout(0);            // no blocking on getch()
+	curs_set(0);           // set the cursor to invisible
+	nodelay(stdscr, TRUE); // Set non-blocking input
+}
+
+game_t InitGameData(){
+	srand(time(NULL));
+	int r = rand() % 7;
+	game_t game = {
+		.tet_rotation = 0,
+		.piece_index = r,
+		.score = 0,
+		.cached_index = {0},
+		.alt_index = 0,
+		.alt_init = false,
+		.game_init = false,
+		.line_cleared = 0,
+		.piece_col = 3,
+		.piece_row = 0,
+		.lowest_piece_row = 0,
+		.state = RUNNING_STATE,
+		.score_c = "score: 0",
+		.lines_c = "lines: 0",
+		.tetrominos =
+		#include "TetrominoDef.h"
+	};
+
+	memset(game.play_area, EMPTY, sizeof(game.play_area));
+	return game;
+}
