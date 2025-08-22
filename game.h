@@ -5,7 +5,7 @@
 #include <ncurses.h>
 #include <math.h>
 #include <stdbool.h>
-#include <time.h>    // nanosleep
+#include <time.h>    // for nanosleep
 
 #define KEY_DELAY 72
 #define ROWS 20
@@ -29,6 +29,12 @@
 
 #define FULL_BLOCK_COLOR true
 
+#define ATTRON(cond, idx) \
+	do { if (cond) attron(COLOR_PAIR((idx) + 1)); } while (0)
+
+#define ATTROFF(cond, idx) \
+	do { if (cond) attroff(COLOR_PAIR((idx) + 1)); } while (0)
+
 enum piece_t{
 	I_PIECE,
 	LEFT_L_PIECE,
@@ -43,7 +49,6 @@ typedef struct {
 	int play_area[ROWS][COLUMNS];
 	char play_area_buffer[ROWS][COLUMNS*2];
 	const int tetrominos[7][4][4][4];
-	//const color_t piece_color_index[7];
 	enum piece_t cached_index[2];
 	enum piece_t piece_index;
 	int piece_col;

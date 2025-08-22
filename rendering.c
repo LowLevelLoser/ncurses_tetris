@@ -8,8 +8,16 @@ void RenderRunningState(const game_t *game);
 void RenderGameOverState(const game_t *game);
 void RenderPauseState(const game_t *game);
 
+void DrawBoard(const game_t *game, int center_row, int center_col);
+void DrawShadowPiece(const game_t *game, int center_row, int center_col);
+void DrawFallingPiece(const game_t *game, int center_row, int center_col);
+void DrawCachedPiece(const game_t *game, int center_row, int center_col);
+void DrawNextPiece(const game_t *game, int center_row, int center_col);
+
 int winChange;
 bool winChangeInit = false;
+bool render_colors = true;
+extern bool has_colors();
 
 void RenderGame(const game_t *game){
 	switch(game->state){
@@ -34,19 +42,31 @@ void RenderRunningState(const game_t *game){
 	}
 	winChangeInit = true;
 	winChange = max_col;
-	//int max_row = getmax(stdscr)y;
 	int max_row = getmaxy(stdscr);
 	int center_col = max_col/2 - COLUMNS;
 	int center_row = max_row/2 - ROWS/2;
 
-	// renders the board
+	DrawBoard(game, center_row, center_col);
+	DrawShadowPiece(game, center_row, center_col);
+	DrawFallingPiece(game, center_row, center_col);
+	DrawCachedPiece(game, center_row, center_col);
+	DrawNextPiece(game, center_row, center_col);
+
+	for (int i = 0; i < 8; i++){ //this doesn't need to be its own function i think
+		mvaddch(6 + center_row, 2*COLUMNS + 2 + i + center_col, '*');
+	}
+	mvprintw(center_row, center_col + 2*COLUMNS+2,"%s",game->score_c);
+	mvprintw(center_row + 1, center_col + 2*COLUMNS+2,"%s",game->lines_c);
+}
+
+void DrawBoard(const game_t *game, int center_row, int center_col){
 	for(int row = 0; row < ROWS; row++){
 		for(int col = 0; col < COLUMNS; col++){
 			if(game->play_area[row][col] != EMPTY){
-				attron(COLOR_PAIR(game->play_area[row][col] + 1));
+				ATTRON(render_colors, game->play_area[row][col]);
 				mvaddch(row + center_row, 2*col + center_col, '[');
 				mvaddch(row + center_row, 2*col+1 + center_col, ']');
-				attroff(COLOR_PAIR(game->play_area[row][col] + 1));
+				ATTROFF(render_colors, game->play_area[row][col]);
 			}
 			else {
 				mvaddch(row + center_row, 2*col + center_col, ' ');
@@ -54,8 +74,9 @@ void RenderRunningState(const game_t *game){
 			}
 		}
 	}
+}
 
-	//renders shadow piece
+void DrawShadowPiece(const game_t *game, int center_row, int center_col){
 	for(int col = 0; col < 4; col++){
 		for(int row = 0; row < 4; row++){
 			if(game->lowest_piece_row >= 0 && game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
@@ -64,8 +85,10 @@ void RenderRunningState(const game_t *game){
 			}
 		}
 	}
-	//renders the falling piece
-	attron(COLOR_PAIR(game->piece_index + 1));
+}
+
+void DrawFallingPiece(const game_t *game, int center_row, int center_col){
+	ATTRON(render_colors, game->piece_index);
 	for(int col = 0; col < 4; col++){
 		for(int row = 0; row < 4; row++){
 			if(game->tetrominos[game->piece_index][game->tet_rotation][row][col] == FALLING_SQUARE){
@@ -74,37 +97,37 @@ void RenderRunningState(const game_t *game){
 			}
 		}
 	}
-	attroff(COLOR_PAIR(game->piece_index + 1));
+	ATTROFF(render_colors, game->piece_index);
+}
 
-	// render RenderMiniPieces
-	if(game->alt_init == true){ //Cached Piece
-		for(int col = 0; col < 4; col++){
-			for(int row = 0; row < 4; row++){
-				if(game->tetrominos[game->alt_index][0][row][col] == FALLING_SQUARE){
-					attron(COLOR_PAIR(game->alt_index + 1));
-					mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 2 + center_col, '[');
-					mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ']');
-					attroff(COLOR_PAIR(game->alt_index + 1));
-				}
-				else{
-					mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 2 + center_col, ' ');
-					mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ' ');
-				}
+void DrawCachedPiece(const game_t *game, int center_row, int center_col){
+	if(game->alt_init == false){
+		return;
+	}
+	for(int col = 0; col < 4; col++){
+		for(int row = 0; row < 4; row++){
+			if(game->tetrominos[game->alt_index][0][row][col] == FALLING_SQUARE){
+				ATTRON(render_colors, game->alt_index);
+				mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 2 + center_col, '[');
+				mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ']');
+				ATTROFF(render_colors, game->alt_index);
+			}
+			else{
+				mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 2 + center_col, ' ');
+				mvaddch(row + 2 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ' ');
 			}
 		}
 	}
+}
 
-	for (int i = 0; i < 8; i++){
-		mvaddch(6 + center_row, 2*COLUMNS + 2 + i + center_col, '*');
-	}
-
-	for(int col = 0; col < 4; col++){ //Up Next
+void DrawNextPiece(const game_t *game, int center_row, int center_col){
+	for(int col = 0; col < 4; col++){
 		for(int row = 0; row < 4; row++){
 			if(game->tetrominos[game->cached_index[0]][0][row][col] == FALLING_SQUARE){
-				attron(COLOR_PAIR(game->cached_index[0] + 1));
+				ATTRON(render_colors, game->cached_index[0]);
 				mvaddch(row + 8 + center_row, 2*col + 2*COLUMNS + 2 + center_col, '[');
 				mvaddch(row + 8 + center_row, 2*col + 2*COLUMNS + 3 + center_col, ']');
-				attroff(COLOR_PAIR(game->cached_index[0] + 1));
+				ATTROFF(render_colors, game->cached_index[0]);
 			}
 			else{
 				mvaddch(row + 8 + center_row, 2*col + 2*COLUMNS + 2 + center_col, ' ');
@@ -112,9 +135,6 @@ void RenderRunningState(const game_t *game){
 			}
 		}
 	}
-
-	mvprintw(center_row, center_col + 2*COLUMNS+2,"%s",game->score_c);
-	mvprintw(center_row + 1, center_col + 2*COLUMNS+2,"%s",game->lines_c);
 }
 
 void RenderPauseState(const game_t *game){
@@ -126,6 +146,7 @@ void RenderPauseState(const game_t *game){
 	mvprintw(center_row,center_col,"PAUSED");
 	refresh();
 }
+
 void RenderGameOverState(const game_t *game){
 	clear();
 	int max_col = getmaxx(stdscr);

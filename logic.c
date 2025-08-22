@@ -257,7 +257,6 @@ bool EdgeCorrect(game_t *game){
 		game->piece_row++;
 	}
 
-	//reset_overlaps();
 	return Collides(game);
 }
 
