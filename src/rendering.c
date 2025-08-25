@@ -6,7 +6,7 @@
 
 void RenderRunningState(const game_t *game);
 void RenderGameOverState(const game_t *game);
-void RenderPauseState(const game_t *game);
+void RenderPauseState();
 
 void DrawBoard(const game_t *game, int center_row, int center_col);
 void DrawShadowPiece(const game_t *game, int center_row, int center_col);
@@ -22,7 +22,7 @@ void RenderGame(const game_t *game){
 			RenderRunningState(game);
 			break;
 		case PAUSE_STATE:
-			RenderPauseState(game);
+			RenderPauseState();
 			break;
 		case GAME_OVER_STATE:
 			RenderGameOverState(game);
@@ -31,7 +31,7 @@ void RenderGame(const game_t *game){
 }
 
 void RenderRunningState(const game_t *game){
-	clear();
+	erase();
 	int center_row = getmaxy(stdscr)/2 - ROWS/2;
 	int center_col = getmaxx(stdscr)/2 - COLUMNS;
 	DrawBoard(game, center_row, center_col);
@@ -45,7 +45,7 @@ void RenderRunningState(const game_t *game){
 	}
 	mvprintw(center_row, center_col + 2*COLUMNS+2,"%s",game->score_c);
 	mvprintw(center_row + 1, center_col + 2*COLUMNS+2,"%s",game->lines_c);
-	refresh();
+	//refresh();
 }
 
 void DrawBoard(const game_t *game, int center_row, int center_col){
@@ -128,8 +128,8 @@ void DrawNextPiece(const game_t *game, int center_row, int center_col){
 	}
 }
 
-void RenderPauseState(const game_t *game){
-	clear();
+void RenderPauseState(){
+	erase();
 	int max_col = getmaxx(stdscr);
 	int max_row = getmaxy(stdscr);
 	int center_col = max_col/2 - 3;
@@ -139,7 +139,7 @@ void RenderPauseState(const game_t *game){
 }
 
 void RenderGameOverState(const game_t *game){
-	clear();
+	erase();
 	int max_col = getmaxx(stdscr);
 	int max_row = getmaxy(stdscr);
 	int center_col = max_col/2 - 5;
